@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import '/api/api.dart';
 
@@ -33,7 +34,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               Container(
                 padding: EdgeInsets.only(bottom: 30),
                 color: Theme.of(context).primaryColor,
-                child: Center(child: Image.asset('assets/images/logo_white.png', width: 200,)),
+                child: Center(
+                    child: Image.asset(
+                  'assets/images/logo_white.png',
+                  width: 200,
+                )),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -68,8 +73,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       margin: const EdgeInsets.all(10.0),
                       decoration: const BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(35.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(35.0)),
                           boxShadow: [
                             BoxShadow(
                               color: containerShadow,
@@ -119,8 +123,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       width: MediaQuery.of(context).size.width,
                       height: 50.0,
                       decoration: const BoxDecoration(
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(35.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(35.0)),
                       ),
                       child: RaisedButton(
                         onPressed: () async {
@@ -174,6 +177,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             showSpinner = false;
           });
           userId = body['data']['id'];
+          Fluttertoast.showToast(
+              msg: "تم إرسال كلمة المرور إلى بريدك الالكتروني");
           Navigator.pop(context);
         } else {
           showDialog(
