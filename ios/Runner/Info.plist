@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 	<dict>
+		<key>API_KEY</key>
+		<string>AIzaSyBb81bbl0NKBxTox3AvkwBheP5uY6DcMSY</string>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleExecutable</key>
@@ -47,11 +49,11 @@
 			<string>iosamap</string>
 		</array>
 		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-		<string>This app needs access to location.</string>
+		<string>This app needs access to location to update driver location.</string>
 		<key>NSLocationAlwaysUsageDescription</key>
-		<string>This app needs access to location.</string>
+		<string>This app needs access to location to update driver location.</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>This app needs access to location.</string>
+		<string>This app needs access to location to update driver location.</string>
 		<key>UIBackgroundModes</key>
 		<array>
 			<string>fetch</string>
