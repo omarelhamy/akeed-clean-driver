@@ -48,6 +48,8 @@
 			<string>comgooglemaps</string>
 			<string>iosamap</string>
 		</array>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Allow access to photo library</string>
 		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 		<string>This app needs access to location to update driver location.</string>
 		<key>NSLocationAlwaysUsageDescription</key>
