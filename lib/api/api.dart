@@ -1,10 +1,9 @@
 import 'dart:convert';
 import 'package:background_location/background_location.dart';
 import 'package:eventify/eventify.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
-
 
 class CallApi {
   static final EventEmitter emitter = new EventEmitter();
@@ -75,9 +74,18 @@ class CallApi {
     await CallApi().postDataWithToken({
       "status": "0",
     }, 'set_coworker_status');
+    await CallApi.updateLocation();
     BackgroundLocation.stopLocationService();
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     localStorage.remove('user');
     localStorage.remove('token');
+  }
+
+  static updateLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    await CallApi().postDataWithToken(
+        {"lat": position.latitude, "lon": position.longitude},
+        'update_coworker_location');
   }
 }

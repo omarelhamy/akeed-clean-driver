@@ -57,6 +57,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     setState(() {
       showSpinner = true;
     });
+
+    CallApi.updateLocation();
     var res = await CallApi().getWithToken(
         'get_coworker_appointment/$previousAppointmentDetailScreenId');
     var body = json.decode(res.body);
@@ -137,6 +139,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   }
 
   Future<void> UpdateAppintment(status) async {
+    CallApi.updateLocation();
     showDialog(
       builder: (context) => AlertDialog(
         title: Text('تاكيد'),

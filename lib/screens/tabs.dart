@@ -97,23 +97,24 @@ class _TabsScreenState extends State<TabsScreen>
       handleNotifications();
     }
 
-    BackgroundLocation.setAndroidConfiguration(1000);
-    await BackgroundLocation.setAndroidNotification(
-      title: "Akeed clean Driver",
-      message: "This app uses location services to track your location",
-      icon: "@drawable/fcm",
-    );
+    CallApi.updateLocation();
+    // BackgroundLocation.setAndroidConfiguration(1000);
+    // await BackgroundLocation.setAndroidNotification(
+    //   title: "Akeed clean Driver",
+    //   message: "This app uses location services to track your location",
+    //   icon: "@drawable/fcm",
+    // );
 
-    BackgroundLocation.startLocationService();
+    // BackgroundLocation.startLocationService();
 
-    BackgroundLocation.getLocationUpdates((location) async {
-      var latitude = location.latitude.toString();
-      var longitude = location.longitude.toString();
+    // BackgroundLocation.getLocationUpdates((location) async {
+    //   var latitude = location.latitude.toString();
+    //   var longitude = location.longitude.toString();
 
-      var res = await CallApi().postDataWithToken(
-          {"lat": latitude, "lon": longitude}, 'update_coworker_location');
-      var body = json.decode(res.body);
-    });
+    //   var res = await CallApi().postDataWithToken(
+    //       {"lat": latitude, "lon": longitude}, 'update_coworker_location');
+    //   var body = json.decode(res.body);
+    // });
   }
 
   void handleNotifications() {
@@ -187,6 +188,7 @@ class _TabsScreenState extends State<TabsScreen>
           Switch(
             value: status,
             onChanged: (c) async {
+              CallApi.updateLocation();
               var res = await CallApi().postDataWithToken({
                 "status": c ? "1" : "0",
               }, 'set_coworker_status');
