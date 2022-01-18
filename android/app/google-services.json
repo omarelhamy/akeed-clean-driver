@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "306756846127",
+    "project_id": "akeed-clean",
+    "storage_bucket": "akeed-clean.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:306756846127:android:f5ad05fb5bf1d5588a3cda",
+        "android_client_info": {
+          "package_name": "com.akeedclean.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "306756846127-mmldphnc7qn4saff4eb4tbl8m3p5tkp4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZiSngN9nVcN1FC2pqOQcbPmti_D0uUag"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "306756846127-mmldphnc7qn4saff4eb4tbl8m3p5tkp4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "306756846127-m44kn879taupkfitaq4f6oilf9j46bof.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.akeedclean.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:306756846127:android:f53a14a6d57051888a3cda",
+        "android_client_info": {
+          "package_name": "com.akeedclean.driverapp.driverapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "306756846127-mmldphnc7qn4saff4eb4tbl8m3p5tkp4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZiSngN9nVcN1FC2pqOQcbPmti_D0uUag"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "306756846127-mmldphnc7qn4saff4eb4tbl8m3p5tkp4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "306756846127-m44kn879taupkfitaq4f6oilf9j46bof.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.akeedclean.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
