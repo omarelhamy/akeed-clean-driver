@@ -555,7 +555,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                               builder: (context) => AlertDialog(
                                 title: Text('تاكيد'),
                                 content: Text(
-                                    'هل تم تحصيل مبلغ $totalCharge ريال ؟'),
+                                    'هل تم تحصيل مبلغ $totalPay ريال ؟'),
                                 actions: <Widget>[
                                   TextButton(
                                     onPressed: () {
