@@ -565,6 +565,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                   ),
                                   TextButton(
                                     onPressed: () {
+                                      Navigator.pop(context);
                                       UpdateAppintment('COMPLETE');
                                     },
                                     child: Text('نعم'),
