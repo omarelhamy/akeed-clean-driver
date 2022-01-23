@@ -11,6 +11,7 @@ import 'package:driverapp/app.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -115,9 +116,8 @@ class _MyAppState extends State<MyApp> {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     setState(() {
       isArabic = localStorage.getBool('isArabic');
-      locale = isArabic
-          ? Locale("ar", "EG")
-          : Locale('en', 'US');
+      locale = isArabic ? Locale("ar", "EG") : Locale('en', 'US');
+      Get.updateLocale(isArabic ? Locale("ar", "EG") : Locale('en', 'US'));
     });
   }
 
@@ -146,10 +146,12 @@ class _MyAppState extends State<MyApp> {
       ),
       home: const SplashScreen(),
       builder: (context, child) {
-        return Directionality(
-          textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-          child: child ?? Container(),
-        );
+        return StatefulBuilder(builder: (context, setState) {
+          return Directionality(
+            textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+            child: child ?? Container(),
+          );
+        });
       },
       routes: <String, WidgetBuilder>{
         '/Login': (BuildContext context) => SignIn(),

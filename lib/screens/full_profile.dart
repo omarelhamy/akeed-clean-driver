@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:driverapp/screens/tabs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_restart/flutter_app_restart.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -61,10 +62,10 @@ class _FullProfileState extends State<FullProfile> {
 
   Future<void> _setLanguage() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
-    setState(() {
-      localStorage.setBool('isArabic', isArabic);
-      Get.updateLocale(isArabic ? Locale("ar", "EG") : Locale('en', 'US'));
-    });
+    await localStorage.setBool('isArabic', isArabic);
+    await Get.updateLocale(isArabic ? Locale("ar", "EG") : Locale('en', 'US'));
+
+    FlutterRestart.restartApp();
   }
 
   Future<void> updateImage() async {
