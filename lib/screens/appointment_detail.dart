@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:driverapp/api/api.dart';
 import 'package:map_launcher/map_launcher.dart';
@@ -64,7 +65,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     var body = json.decode(res.body);
 
     if (body['data'] == null) {
-      Fluttertoast.showToast(msg: 'هذا الحجز غير موجود');
+      Fluttertoast.showToast(msg: 'appointment_not_found'.tr);
       return Navigator.pop(context);
     }
 
@@ -79,23 +80,23 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
     if (AppointmentDetailScreenStatus == 'PENDING') {
       setState(() {
-        AppointmentDetailScreenStatus = "قيد الانتظار";
+        AppointmentDetailScreenStatus = 'pending'.tr;
       });
     } else if (AppointmentDetailScreenStatus == 'ACCEPT') {
       setState(() {
-        AppointmentDetailScreenStatus = "تم قبول الطلب";
+        AppointmentDetailScreenStatus = 'accepted'.tr;
       });
     } else if (AppointmentDetailScreenStatus == 'APPROVE') {
       setState(() {
-        AppointmentDetailScreenStatus = "قيد التنفيذ";
+        AppointmentDetailScreenStatus = 'approved'.tr;
       });
     } else if (AppointmentDetailScreenStatus == 'CANCEL') {
       setState(() {
-        AppointmentDetailScreenStatus = "تم الإلغاء";
+        AppointmentDetailScreenStatus = 'canceled'.tr;
       });
     } else if (AppointmentDetailScreenStatus == 'COMPLETE') {
       setState(() {
-        AppointmentDetailScreenStatus = "تم الإنتهاء";
+        AppointmentDetailScreenStatus = 'completed'.tr;
       });
     }
 
@@ -142,14 +143,14 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     CallApi.updateLocation();
     showDialog(
       builder: (context) => AlertDialog(
-        title: Text('تاكيد'),
-        content: Text('هل انت متاكد من تغيير الحالة ؟'),
+        title: Text('confirm'.tr),
+        content: Text('confirm_status'.tr),
         actions: <Widget>[
           TextButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text('الغاء'),
+            child: Text('cancel'.tr),
           ),
           TextButton(
             onPressed: () async {
@@ -166,14 +167,14 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 GetAppointmentDetailScreenData();
               }
               else {
-                Fluttertoast.showToast(msg: "يرجى المحاولة مرة اخرى");
+                Fluttertoast.showToast(msg: 'try_again'.tr);
               }
 
               setState(() {
                 showSpinner = false;
               });
             },
-            child: Text('حسنا'),
+            child: Text('ok'.tr),
           )
         ],
       ),
@@ -188,7 +189,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         backgroundColor: Theme.of(context).primaryColor,
         centerTitle: true,
         title: Text(
-          'تفاصيل الحجز',
+          'appointment_details'.tr,
           style: TextStyle(
             fontSize: 18.0,
             fontFamily: 'Cairo',
@@ -220,7 +221,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'حالة الحجز : $AppointmentDetailScreenStatus',
+                              '${'status'.tr} : $AppointmentDetailScreenStatus',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
@@ -235,8 +236,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                     mapType: MapType.google,
                                     coords: Coords(
                                         double.parse(lat), double.parse(lng)),
-                                    title: 'موقع العميل',
-                                    description: 'موقع العميل',
+                                    title: 'client_location'.tr,
+                                    description: 'client_location'.tr,
                                   );
                                 } else if (await MapLauncher.isMapAvailable(
                                     MapType.apple)) {
@@ -244,8 +245,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                     mapType: MapType.apple,
                                     coords: Coords(
                                         double.parse(lat), double.parse(lng)),
-                                    title: 'موقع العميل',
-                                    description: 'موقع العميل',
+                                    title: 'client_location'.tr,
+                                    description: 'client_location'.tr,
                                   );
                                 }
                               },
@@ -274,7 +275,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                           ),
                         SizedBox(height: 20),
                         Text(
-                          'رقم الحجز : $AppointmentDetailScreenId',
+                          '${'appointment_number'.tr} : $AppointmentDetailScreenId',
                           style: TextStyle(
                             color: extraDarkBlue,
                             fontSize: 14,
@@ -288,7 +289,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'التاريخ',
+                          'date'.tr,
                           style: TextStyle(
                             color: darkBlue,
                             fontSize: 18.0,
@@ -311,7 +312,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'الخدمات',
+                          'services'.tr,
                           style: TextStyle(
                             color: darkBlue,
                             fontSize: 18,
@@ -371,7 +372,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                         ),
                                       ),
                                       Text(
-                                        '${totalCharge} ريال',
+                                        '${totalCharge} ${'riyal'.tr}',
                                         style: TextStyle(
                                           color: darkBlue,
                                           fontFamily: 'Cairo',
@@ -392,7 +393,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              'المدة : ${viewAppointmentDetailScreenservice["duration"]} دقيقة',
+                                              '${'duration'.tr} : ${viewAppointmentDetailScreenservice["duration"]} دقيقة',
                                               style: TextStyle(
                                                 color: extraDarkBlue,
                                                 fontSize: 14,
@@ -427,7 +428,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'تفاصيل الفاتورة',
+                            'invoice_details'.tr,
                             style: TextStyle(
                               color: darkBlue,
                               fontSize: 18.0,
@@ -436,25 +437,17 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                           ),
                           SizedBox(height: 10.0),
                           Text(
-                            'تم الدفع بواسطة $paymentDoneBy.',
+                            '${'payment_done_by'.tr} $paymentDoneBy.',
                             style: TextStyle(
                               color: darkBlue,
                               fontFamily: 'Cairo',
                               fontSize: 14,
                             ),
                           ),
-                          Text(
-                            'المدة : $totalDuration دقيقة',
-                            style: TextStyle(
-                              color: darkBlue,
-                              fontSize: 14.0,
-                              fontFamily: 'Cairo',
-                            ),
-                          ),
                           SizedBox(height: 20.0),
                           Center(
                             child: Text(
-                              'المطلوب للدفع',
+                              'subtotal'.tr,
                               style: TextStyle(
                                 color: darkBlue,
                                 fontSize: 14.0,
@@ -464,7 +457,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                           ),
                           Center(
                             child: Text(
-                              '$totalPay ريال',
+                              '$totalPay ${'riyal'.tr}',
                               style: TextStyle(
                                   color: Colors.red,
                                   fontSize: 30.0,
@@ -489,7 +482,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                 UpdateAppintment('ACCEPT');
                               },
                               child: Text(
-                                "قبول الطلب",
+                                'accept_appointment'.tr,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18.0,
@@ -509,7 +502,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                 UpdateAppintment('CANCEL');
                               },
                               child: Text(
-                                "إلغاء الطلب",
+                                'cancel_appointment'.tr,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18.0,
@@ -532,7 +525,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                             UpdateAppintment('APPROVE');
                           },
                           child: Text(
-                            "بدأ الحجز",
+                            'start_appointment'.tr,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18.0,
@@ -553,22 +546,22 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                           onPressed: () {
                             showDialog(
                               builder: (context) => AlertDialog(
-                                title: Text('تاكيد'),
+                                title: Text('confirm'.tr),
                                 content: Text(
-                                    'هل تم تحصيل مبلغ $totalPay ريال ؟'),
+                                    '${'payment_collected'.tr} $totalPay ${'ryial'.tr} ؟'),
                                 actions: <Widget>[
                                   TextButton(
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
-                                    child: Text('لا'),
+                                    child: Text('no'.tr),
                                   ),
                                   TextButton(
                                     onPressed: () {
                                       Navigator.pop(context);
                                       UpdateAppintment('COMPLETE');
                                     },
-                                    child: Text('نعم'),
+                                    child: Text('ok'.tr),
                                   )
                                 ],
                               ),
@@ -576,7 +569,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                             );
                           },
                           child: Text(
-                            "تحصيل الفاتورة و إنهاء",
+                            'collect_payment'.tr,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18.0,
@@ -598,7 +591,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                             UpdateAppintment('COMPLETE');
                           },
                           child: Text(
-                            "إكمال الحجز",
+                            'complete_appointment'.tr,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18.0,

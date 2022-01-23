@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:driverapp/screens/appointment_detail.dart';
 import 'package:driverapp/screens/sign_in.dart';
 import 'package:driverapp/screens/tabs.dart';
+import 'package:driverapp/translations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,8 @@ import 'package:driverapp/app.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final navKey = new GlobalKey<NavigatorState>();
 void main() async {
@@ -93,17 +96,43 @@ void onSelectNotification(String body) {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool isArabic = true;
+  Locale locale = Locale("ar", "EG");
+
+  @override
+  void initState() {
+    super.initState();
+    _getLanguage();
+  }
+
+  Future<void> _getLanguage() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    setState(() {
+      isArabic = localStorage.getBool('isArabic');
+      locale = isArabic
+          ? Locale("ar", "EG")
+          : Locale('en', 'US');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    return MaterialApp(
+    return GetMaterialApp(
+      translations: AppTranslations(),
+      locale: locale,
+      fallbackLocale: Locale('ar', 'EG'),
       navigatorKey: navKey,
       title: 'Akeed Clean Driver',
       debugShowCheckedModeBanner: false,
-      locale: const Locale("ar", "AR"),
       localizationsDelegates: const [
         GlobalCupertinoLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -118,7 +147,7 @@ class MyApp extends StatelessWidget {
       home: const SplashScreen(),
       builder: (context, child) {
         return Directionality(
-          textDirection: TextDirection.rtl,
+          textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
           child: child ?? Container(),
         );
       },

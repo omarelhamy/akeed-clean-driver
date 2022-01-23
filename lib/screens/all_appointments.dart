@@ -4,6 +4,7 @@ import 'package:driverapp/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -24,6 +25,7 @@ class AppointmentsScreen extends StatefulWidget {
 class _AppointmentsScreenState extends State<AppointmentsScreen>
     with TickerProviderStateMixin {
   bool showSpinner = true;
+  List<Map<String, dynamic>> current = [];
   List<Map<String, dynamic>> ongoing = [];
   List<Map<String, dynamic>> past = [];
 
@@ -43,6 +45,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
   Animation<double> _animation;
   AnimationController _animationController;
 
+  List<Map<String, dynamic>> _current = [];
   List<Map<String, dynamic>> _ongoing = [];
   List<Map<String, dynamic>> _past = [];
 
@@ -51,7 +54,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(_handleTabSelection);
     fetchData();
 
@@ -93,11 +96,20 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
     try {
       var res = await CallApi().getWithToken('coworker_appointment');
       setState(() {
+        _current = List<Map<String, dynamic>>.from(
+            json.decode(res.body)['data']['current']);
         _ongoing = List<Map<String, dynamic>>.from(
             json.decode(res.body)['data']['ongoing']);
         _past = List<Map<String, dynamic>>.from(
             json.decode(res.body)['data']['past']);
 
+        _current = _current.map((e) {
+          DateFormat inputFormat = DateFormat("yyyy-MM-dd hh:mm a");
+          e['full_date'] = inputFormat.parse(
+              '${e['date']} ${e['start_time'].toString().toUpperCase()}');
+          return e;
+        }).toList();
+        
         _ongoing = _ongoing.map((e) {
           DateFormat inputFormat = DateFormat("yyyy-MM-dd hh:mm a");
           e['full_date'] = inputFormat.parse(
@@ -111,9 +123,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
           return e;
         }).toList();
 
+        _current.sort((a, b) => a['full_date'].compareTo(b['full_date']));
         _ongoing.sort((a, b) => a['full_date'].compareTo(b['full_date']));
         _past.sort((a, b) => a['full_date'].compareTo(b['full_date']));
 
+        current = _current.toList();
         ongoing = _ongoing.toList();
         past = _past.toList();
       });
@@ -162,10 +176,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                 controller: _tabController,
                 tabs: [
                   Tab(
-                    text: 'حجوزات اليوم',
+                    text: 'current_appointments'.tr,
                   ),
                   Tab(
-                    text: 'الحجوزات السابقة',
+                    text: 'todays_appointments'.tr,
+                  ),
+                  Tab(
+                    text: 'prev_appointments'.tr,
                   ),
                 ],
               ),
@@ -184,6 +201,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
             ? TabBarView(
                 controller: _tabController,
                 children: [
+                  buildList(current),
                   buildList(ongoing),
                   buildList(past),
                 ],
@@ -202,7 +220,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
           initialCameraPosition: _kGooglePlex,
           onMapCreated: _onMapCreated,
           onCameraMove: _onCameraMove,
-          // padding: EdgeInsets.only(bottom: 70, top: 130, left: 5, right: 5),
           myLocationButtonEnabled: true,
           myLocationEnabled: true,
           zoomGesturesEnabled: true,
@@ -237,7 +254,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                       ),
                     ),
                     Text(
-                      '${_selectedAppointment["amount"]} ريال',
+                      '${_selectedAppointment["amount"]} ${'riyal'.tr}',
                       style: TextStyle(
                         color: darkBlue,
                         fontSize: 16,
@@ -260,7 +277,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                       textDirection: material.TextDirection.ltr,
                     ),
                     Text(
-                      'الخدمة: ${_selectedAppointment["service"]["service_name"]}',
+                      '${'service'.tr}: ${_selectedAppointment["service"]["service_name"]}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -330,7 +347,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
     if (list.isEmpty) {
       return Center(
         child: Text(
-          "لا يوجد حجوزات",
+          'no_appointments'.tr,
           style: TextStyle(color: Colors.grey),
         ),
       );
@@ -367,7 +384,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                   ),
                 ),
                 Text(
-                  '${apt["amount"]} ريال',
+                  '${apt["amount"]} ${'riyal'.tr}',
                   style: TextStyle(
                     color: darkBlue,
                     fontSize: 16,
@@ -389,7 +406,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                   textDirection: material.TextDirection.ltr,
                 ),
                 Text(
-                  'الخدمة: ${apt["service"]["service_name"]}',
+                  '${'service'.tr}: ${apt["service"]["service_name"]}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -399,7 +416,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                   ),
                 ),
                 Text(
-                  'الحالة: ${renderStatus(apt['appointment_status'])}',
+                  '${'status'.tr}: ${renderStatus(apt['appointment_status'])}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -419,15 +436,15 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
 
   renderStatus(AppointmentDetailScreenStatus) {
     if (AppointmentDetailScreenStatus == 'PENDING') {
-      return "قيد الانتظار";
+      return "pending".tr;
     } else if (AppointmentDetailScreenStatus == 'ACCEPT') {
-      return "تم قبول الطلب";
+      return "accepted".tr;
     } else if (AppointmentDetailScreenStatus == 'APPROVE') {
-      return "قيد التنفيذ";
+      return "approved".tr;
     } else if (AppointmentDetailScreenStatus == 'CANCEL') {
-      return "تم الإلغاء";
+      return "canceled".tr;
     } else if (AppointmentDetailScreenStatus == 'COMPLETE') {
-      return "تم الإنتهاء";
+      return "completed".tr;
     }
   }
 }

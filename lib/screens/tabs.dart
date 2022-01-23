@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:eventify/eventify.dart';
 import 'package:background_location/background_location.dart';
@@ -70,10 +71,10 @@ class _TabsScreenState extends State<TabsScreen>
     CallApi().getWithToken('get_coworker_status').then((res) {
       var body = json.decode(res.body);
       if (body['success'] == true) {
-        if (body['data'] == 1)
-          BackgroundLocation.startLocationService();
-        else
-          BackgroundLocation.stopLocationService();
+        // if (body['data'] == 1)
+        //   BackgroundLocation.startLocationService();
+        // else
+        //   BackgroundLocation.stopLocationService();
         setState(() {
           status = body['data'] == 1 ? true : false;
         });
@@ -160,10 +161,10 @@ class _TabsScreenState extends State<TabsScreen>
         selectedIconTheme: IconThemeData(color: Theme.of(context).primaryColor),
         selectedItemColor: Theme.of(context).primaryColor,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.alarm), label: "حجوزات"),
+          BottomNavigationBarItem(icon: Icon(Icons.alarm), label: "appointments".tr),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'الحساب',
+            label: 'account'.tr,
           ),
         ],
         currentIndex: _selectedIndex,
@@ -179,7 +180,7 @@ class _TabsScreenState extends State<TabsScreen>
             ),
             SizedBox(width: 15),
             Text(
-              'الحالة: ${status == true ? 'متاح' : 'غير متاح'}',
+              '${'status'.tr}: ${status == true ? 'available'.tr : 'unavailable'.tr}',
               style: TextStyle(fontSize: 14),
             ),
           ],
@@ -194,15 +195,15 @@ class _TabsScreenState extends State<TabsScreen>
               }, 'set_coworker_status');
               var body = json.decode(res.body);
               if (body['success'] == true) {
-                if (c == true)
-                  BackgroundLocation.startLocationService();
-                else
-                  BackgroundLocation.stopLocationService();
+                // if (c == true)
+                //   BackgroundLocation.startLocationService();
+                // else
+                //   BackgroundLocation.stopLocationService();
                 setState(() {
                   status = c;
                 });
               } else {
-                Fluttertoast.showToast(msg: "حدث خطأ ما");
+                Fluttertoast.showToast(msg: "something_went_wrong".tr);
                 setState(() {
                   status = !c;
                 });

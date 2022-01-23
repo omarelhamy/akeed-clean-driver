@@ -49,6 +49,7 @@ dependencies:
   map_launcher: ^2.1.2
   eventify: ^1.0.0
   background_location: ^0.8.1
+  get: ^4.6.1
 
 dev_dependencies:
   flutter_test:

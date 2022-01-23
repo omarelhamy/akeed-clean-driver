@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import '/api/api.dart';
 
@@ -46,9 +47,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Column(
-                      children: const [
+                      children: [
                         Text(
-                          'نسيت كلمة المرور؟',
+                          'forgot_password'.tr,
                           style: TextStyle(
                             color: darkBlue,
                             fontSize: 20.0,
@@ -58,7 +59,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         Padding(
                           padding: EdgeInsets.only(bottom: 20.0, top: 15),
                           child: Text(
-                            'ادخل بريدك الالكتروني لاسترجاع كلمة المرور',
+                            'enter_password_to_continue'.tr,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: extraDarkBlue,
@@ -90,21 +91,21 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           RegExp regex = new RegExp(pattern);
                           // Null check
                           if (value.isEmpty) {
-                            return 'البريد الالكتروني مطلوب';
+                            return 'enter_email'.tr;
                           }
                           // Valid email formatting check
                           else if (!regex.hasMatch(value)) {
-                            return 'البريد الالكتروني غير صحيح';
+                            return 'enter_valid_email'.tr;
                           }
                           // success condition
                           return null;
                         },
                         enableSuggestions: false,
                         keyboardType: TextInputType.visiblePassword,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           contentPadding: EdgeInsets.all(15),
                           border: InputBorder.none,
-                          hintText: 'البريد الالكتروني',
+                          hintText: 'email_address'.tr,
                           hintStyle: TextStyle(
                             color: extraDarkBlue,
                             fontSize: 16,
@@ -141,8 +142,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           ),
                         ),
                         color: Theme.of(context).primaryColor,
-                        child: const Text(
-                          'استرجاع كلمة المرور',
+                        child: Text(
+                          'reset_password'.tr,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
@@ -178,12 +179,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           });
           userId = body['data']['id'];
           Fluttertoast.showToast(
-              msg: "تم إرسال كلمة المرور إلى بريدك الالكتروني");
+              msg: 'password_sent'.tr);
           Navigator.pop(context);
         } else {
           showDialog(
             builder: (context) => AlertDialog(
-              title: Text('خطأ'),
+              title: Text('error'.tr),
               content: Text(body['data'].toString()),
               actions: <Widget>[
                 TextButton(
@@ -193,7 +194,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     });
                     Navigator.pop(context);
                   },
-                  child: Text('حاول مرة اخرى'),
+                  child: Text('do_try_again'.tr),
                 )
               ],
             ),
@@ -203,8 +204,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       } else {
         showDialog(
           builder: (context) => AlertDialog(
-            title: Text('خطأ'),
-            content: Text('البريد الالكتروني مطلوب'),
+            title: Text('error'.tr),
+            content: Text('enter_email'.tr),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
@@ -213,7 +214,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   });
                   Navigator.pop(context);
                 },
-                child: Text('حاول مرة اخرى'),
+                child: Text('do_try_again'.tr),
               )
             ],
           ),
@@ -223,7 +224,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     } catch (e) {
       showDialog(
         builder: (context) => AlertDialog(
-          title: Text('خطأ'),
+          title: Text('error'),
           content: Text(e.toString()),
           actions: <Widget>[
             TextButton(
@@ -233,7 +234,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 });
                 Navigator.pop(context);
               },
-              child: Text('حاول مرة اخرى'),
+              child: Text('do_try_again'.tr),
             )
           ],
         ),

@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:driverapp/api/api.dart';
@@ -56,8 +57,8 @@ class _SignInState extends State<SignIn> {
       } else {
         showDialog(
           builder: (context) => AlertDialog(
-            title: Text('No Internet Connection'),
-            content: Text('يرجى التحقق من الاتصال'),
+            title: Text('no_internet'.tr),
+            content: Text('check_internet'.tr),
             actions: <Widget>[
               TextButton(
                 onPressed: () async {
@@ -68,7 +69,7 @@ class _SignInState extends State<SignIn> {
                         builder: (context) => SignIn(),
                       ));
                 },
-                child: Text('حسنا'),
+                child: Text('ok'.tr),
               )
             ],
           ),
@@ -115,7 +116,7 @@ class _SignInState extends State<SignIn> {
           } else {
             showDialog(
               builder: (context) => AlertDialog(
-                title: Text('خطأ'),
+                title: Text('error'.tr),
                 content: Text(body['message'].toString()),
                 actions: <Widget>[
                   TextButton(
@@ -123,7 +124,7 @@ class _SignInState extends State<SignIn> {
 //                Navigator.popAndPushNamed(context, Login.route);
                       Navigator.pop(context);
                     },
-                    child: Text('يرجى المحاولة مرة اخرى'),
+                    child: Text('try_again'.tr),
                   )
                 ],
               ),
@@ -133,14 +134,14 @@ class _SignInState extends State<SignIn> {
         } catch (e) {
           showDialog(
             builder: (context) => AlertDialog(
-              title: Text('خطأ'),
+              title: Text('error'.tr),
               content: Text(e.toString()),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('يرجى المحاولة مرة اخرى'),
+                  child: Text('try_again'.tr),
                 )
               ],
             ),
@@ -153,8 +154,8 @@ class _SignInState extends State<SignIn> {
       } else {
         showDialog(
           builder: (context) => AlertDialog(
-            title: Text('خطأ'),
-            content: Text('يرجى الـتأكد من اتصالك بالانترنت'),
+            title: Text('error'.tr),
+            content: Text('check_internet'.tr),
             actions: <Widget>[
               TextButton(
                 onPressed: () async {
@@ -165,7 +166,7 @@ class _SignInState extends State<SignIn> {
                         builder: (context) => SignIn(),
                       ));
                 },
-                child: Text('حسنا'),
+                child: Text('ok'.tr),
               )
             ],
           ),
@@ -209,7 +210,7 @@ class _SignInState extends State<SignIn> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        'تسجيل الدخول',
+                        'sign_in'.tr,
                         style: TextStyle(
                           color: darkBlue,
                           fontSize: 20.0,
@@ -243,11 +244,11 @@ class _SignInState extends State<SignIn> {
                             RegExp regex = new RegExp(pattern);
                             // Null check
                             if (value.isEmpty) {
-                              return 'الرجاء ادخال البريد الالكتروني';
+                              return 'enter_email'.tr;
                             }
                             // Valid email formatting check
                             else if (!regex.hasMatch(value)) {
-                              return 'الرجاء ادخال بريد الكتروني صحيح';
+                              return 'enter_valid_email'.tr;
                             }
                             // success condition
                             return null;
@@ -293,9 +294,9 @@ class _SignInState extends State<SignIn> {
                           controller: _passwordController,
                           validator: (value) {
                             if (value.isEmpty) {
-                              return "الرجاء ادخال كلمة المرور";
+                              return "enter_password".tr;
                             } else if (value.length < 6) {
-                              return "كلمة المرور قصيرة جدا";
+                              return "short_password".tr;
                             } else {
                               return null;
                             }
@@ -312,7 +313,7 @@ class _SignInState extends State<SignIn> {
                               'assets/icons/lockicon.svg',
                               fit: BoxFit.scaleDown,
                             ),
-                            hintText: 'كلمة المرور',
+                            hintText: 'password'.tr,
                             hintStyle: TextStyle(
                               color: darkBlue,
                               fontSize: 16,
@@ -337,7 +338,7 @@ class _SignInState extends State<SignIn> {
                                 ));
                           },
                           child: Text(
-                            'نسيت كلمة المرور؟',
+                            'forgot_password'.tr,
                             style: TextStyle(
                               color: extraDarkBlue,
                               fontFamily: 'Cairo',
@@ -375,7 +376,7 @@ class _SignInState extends State<SignIn> {
                               ),
                               color: Theme.of(context).primaryColor,
                               child: Text(
-                                'تسجيل الدخول',
+                                'sign_in'.tr,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,

@@ -4,10 +4,13 @@ import 'dart:io';
 import 'package:driverapp/screens/tabs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:driverapp/api/api.dart';
 import 'package:driverapp/screens/custom_drawer.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const darkBlue = Color(0xFF265E9E);
 const extraDarkBlue = Color(0xFF91B4D8);
@@ -39,12 +42,29 @@ class _FullProfileState extends State<FullProfile> {
   var nameChange = 0;
   var proPicChange = 0;
   var passwordCheck = 0;
+  bool isArabic = true;
   List<Map<String, dynamic>> packages = [];
 
   @override
   void initState() {
     _getProfileInfo();
+    _getLanguage();
     super.initState();
+  }
+
+  Future<void> _getLanguage() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    setState(() {
+      isArabic = localStorage.getBool('isArabic');
+    });
+  }
+
+  Future<void> _setLanguage() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    setState(() {
+      localStorage.setBool('isArabic', isArabic);
+      Get.updateLocale(isArabic ? Locale("ar", "EG") : Locale('en', 'US'));
+    });
   }
 
   Future<void> updateImage() async {
@@ -62,14 +82,14 @@ class _FullProfileState extends State<FullProfile> {
     } else {
       showDialog(
         builder: (context) => AlertDialog(
-          title: Text('خطأ'),
-          content: Text('حدث خطأ ما'),
+          title: Text('error'.tr),
+          content: Text('something_went_wrong'.tr),
           actions: <Widget>[
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
               },
-              child: Text('حسنا'),
+              child: Text('ok'.tr),
             )
           ],
         ),
@@ -96,14 +116,14 @@ class _FullProfileState extends State<FullProfile> {
     } else {
       showDialog(
         builder: (context) => AlertDialog(
-          title: Text('خطأ'),
-          content: Text('حدث خطأ ما'),
+          title: Text('error'.tr),
+          content: Text('something_went_wrong'.tr),
           actions: <Widget>[
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
               },
-              child: Text('حسنا'),
+              child: Text('ok'.tr),
             )
           ],
         ),
@@ -130,14 +150,14 @@ class _FullProfileState extends State<FullProfile> {
     } else {
       showDialog(
         builder: (context) => AlertDialog(
-          title: Text('خطأ'),
-          content: Text('حدث خطأ ما'),
+          title: Text('error'.tr),
+          content: Text('something_went_wrong'.tr),
           actions: <Widget>[
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
               },
-              child: Text('حسنا'),
+              child: Text('ok'.tr),
             )
           ],
         ),
@@ -184,14 +204,14 @@ class _FullProfileState extends State<FullProfile> {
                 children: <Widget>[
                   new ListTile(
                       leading: new Icon(Icons.photo_library),
-                      title: new Text('معرض الصور'),
+                      title: new Text('gallery'.tr),
                       onTap: () {
                         _imgFromGallery();
                         Navigator.of(context).pop();
                       }),
                   new ListTile(
                     leading: new Icon(Icons.photo_camera),
-                    title: new Text('الكاميرا'),
+                    title: new Text('camera'.tr),
                     onTap: () {
                       _imgFromCamera();
                       Navigator.of(context).pop();
@@ -246,7 +266,7 @@ class _FullProfileState extends State<FullProfile> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'الإسم',
+                              'name'.tr,
                               style: TextStyle(
                                 color: extraDarkBlue,
                                 fontSize: 14,
@@ -262,7 +282,7 @@ class _FullProfileState extends State<FullProfile> {
                                 changeName = name;
                               },
                               decoration: InputDecoration(
-                                hintText: 'إدخل الإسم',
+                                hintText: 'enter_name'.tr,
                                 hintStyle: TextStyle(
                                   color: darkBlue,
                                   fontSize: 18,
@@ -279,7 +299,7 @@ class _FullProfileState extends State<FullProfile> {
                             ),
                             SizedBox(height: 20.0),
                             Text(
-                              'الجوال',
+                              'phone'.tr,
                               style: TextStyle(
                                 color: extraDarkBlue,
                                 fontSize: 14,
@@ -301,11 +321,11 @@ class _FullProfileState extends State<FullProfile> {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      'تم التأكيد',
+                                      'confirmed'.tr,
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 12,
-                                        fontFamily: 'Rubik',
+                                        fontFamily: 'Cairo',
                                         letterSpacing: 0.3,
                                       ),
                                     ),
@@ -327,9 +347,19 @@ class _FullProfileState extends State<FullProfile> {
                               ),
                             ),
                             SizedBox(height: 20.0),
+                            CheckboxListTile(
+                                value: isArabic,
+                                title: Text('arabic'.tr),
+                                onChanged: (val) {
+                                  setState(() {
+                                    isArabic = val;
+                                    _setLanguage();
+                                  });
+                                }),
+                            SizedBox(height: 20.0),
                             ExpansionTile(
                               title: Text(
-                                'تغيير كلمة المرور',
+                                'change_password'.tr,
                                 style: TextStyle(
                                   color: darkBlue,
                                   fontSize: 18.0,
@@ -341,7 +371,7 @@ class _FullProfileState extends State<FullProfile> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'كلمة المرور الحالية',
+                                      'current_password'.tr,
                                       style: TextStyle(
                                         color: extraDarkBlue,
                                         fontSize: 14,
@@ -355,9 +385,9 @@ class _FullProfileState extends State<FullProfile> {
                                       controller: _oldPasswordController,
                                       validator: (value) {
                                         if (value.isEmpty) {
-                                          return "الرجاء إدخال كلمة المرور الحالية";
+                                          return "enter_current_password".tr;
                                         } else if (value.length < 6) {
-                                          return "كلمة المرور قصيرة جدا";
+                                          return "short_password".tr;
                                         } else {
                                           return null;
                                         }
@@ -381,7 +411,7 @@ class _FullProfileState extends State<FullProfile> {
                                     ),
                                     SizedBox(height: 20.0),
                                     Text(
-                                      'كلمة المرور الجديدة',
+                                      'new_password'.tr,
                                       style: TextStyle(
                                         color: extraDarkBlue,
                                         fontSize: 14,
@@ -392,9 +422,9 @@ class _FullProfileState extends State<FullProfile> {
                                       controller: _newPasswordController,
                                       validator: (value) {
                                         if (value.isEmpty) {
-                                          return "الرجاء إدخال كلمة المرور الجديدة";
+                                          return "enter_new_password".tr;
                                         } else if (value.length < 6) {
-                                          return "كلمة المرور قصيرة جدا";
+                                          return "short_password".tr;
                                         } else {
                                           return null;
                                         }
@@ -418,7 +448,7 @@ class _FullProfileState extends State<FullProfile> {
                                     ),
                                     SizedBox(height: 20.0),
                                     Text(
-                                      'تأكيد كلمة المرور الجديدة',
+                                      'confirm_new_password'.tr,
                                       style: TextStyle(
                                         color: extraDarkBlue,
                                         fontSize: 14,
@@ -429,10 +459,11 @@ class _FullProfileState extends State<FullProfile> {
                                       controller: _confirmPasswordController,
                                       validator: (value) {
                                         if (value.isEmpty) {
-                                          return "الرجاء إدخال تأكيد كلمة المرور";
+                                          return "enter_confirm_new_password"
+                                              .tr;
                                         } else if (value !=
                                             _newPasswordController.text) {
-                                          return "كلمة المرور غير متطابقة";
+                                          return "password_not_match".tr;
                                         } else {
                                           return null;
                                         }
@@ -461,7 +492,7 @@ class _FullProfileState extends State<FullProfile> {
                             ),
                           ],
                         ),
-                      ),                      
+                      ),
                       SizedBox(height: 50),
                     ],
                   ),
@@ -481,8 +512,7 @@ class _FullProfileState extends State<FullProfile> {
                 apiPassword = {
                   "old_password": "${_oldPasswordController.text}",
                   "password": "${_newPasswordController.text}",
-                  "password_confirmation":
-                      "${_confirmPasswordController.text}"
+                  "password_confirmation": "${_confirmPasswordController.text}"
                 };
                 updatePassword(apiPassword);
               }
