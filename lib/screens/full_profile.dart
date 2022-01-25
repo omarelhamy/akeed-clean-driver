@@ -56,7 +56,9 @@ class _FullProfileState extends State<FullProfile> {
   Future<void> _getLanguage() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     setState(() {
-      isArabic = localStorage.getBool('isArabic');
+      if (localStorage.containsKey('isArabic')) {
+        isArabic = localStorage.getBool('isArabic');
+      }
     });
   }
 
@@ -64,8 +66,6 @@ class _FullProfileState extends State<FullProfile> {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     await localStorage.setBool('isArabic', isArabic);
     await Get.updateLocale(isArabic ? Locale("ar", "EG") : Locale('en', 'US'));
-
-    RestartWidget.restartApp(context);
   }
 
   Future<void> updateImage() async {
@@ -355,6 +355,7 @@ class _FullProfileState extends State<FullProfile> {
                                   setState(() {
                                     isArabic = val;
                                     _setLanguage();
+                                    RestartWidget.restartApp(context);
                                   });
                                 }),
                             SizedBox(height: 20.0),
