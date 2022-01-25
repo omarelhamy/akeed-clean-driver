@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io' as Io;
 import 'dart:io';
+import 'package:driverapp/main.dart';
 import 'package:driverapp/screens/tabs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_restart/flutter_app_restart.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -65,7 +65,7 @@ class _FullProfileState extends State<FullProfile> {
     await localStorage.setBool('isArabic', isArabic);
     await Get.updateLocale(isArabic ? Locale("ar", "EG") : Locale('en', 'US'));
 
-    FlutterRestart.restartApp();
+    RestartWidget.restartApp(context);
   }
 
   Future<void> updateImage() async {

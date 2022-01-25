@@ -49,7 +49,7 @@ void main() async {
   }
   FirebaseMessaging.onMessageOpenedApp
       .listen(_firebaseMessagingBackgroundHandler);
-  runApp(MyApp());
+  runApp(RestartWidget(child: MyApp()));
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -95,6 +95,37 @@ void onSelectNotification(String body) {
       ),
     ),
   );
+}
+
+class RestartWidget extends StatefulWidget {
+  RestartWidget({this.child});
+
+  final Widget child;
+
+  static void restartApp(BuildContext context) {
+    context.findAncestorStateOfType<_RestartWidgetState>().restartApp();
+  }
+
+  @override
+  _RestartWidgetState createState() => _RestartWidgetState();
+}
+
+class _RestartWidgetState extends State<RestartWidget> {
+  Key key = UniqueKey();
+
+  void restartApp() {
+    setState(() {
+      key = UniqueKey();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyedSubtree(
+      key: key,
+      child: widget.child,
+    );
+  }
 }
 
 class MyApp extends StatefulWidget {
