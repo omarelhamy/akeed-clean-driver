@@ -164,7 +164,9 @@ class _MyAppState extends State<MyApp> {
   Future<void> _getLanguage() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     setState(() {
-      isArabic = localStorage.getBool('isArabic');
+      if (localStorage.containsKey('isArabic')) {
+        isArabic = localStorage.getBool('isArabic') ?? true;
+      }
       locale = isArabic ? Locale("ar", "EG") : Locale('en', 'US');
       Get.updateLocale(isArabic ? Locale("ar", "EG") : Locale('en', 'US'));
     });
@@ -197,7 +199,7 @@ class _MyAppState extends State<MyApp> {
       builder: (context, child) {
         return StatefulBuilder(builder: (context, setState) {
           return Directionality(
-            textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+            textDirection: isArabic == true ? TextDirection.rtl : TextDirection.ltr,
             child: child ?? Container(),
           );
         });
