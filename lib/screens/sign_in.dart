@@ -262,7 +262,7 @@ class _SignInState extends State<SignIn> {
                               'assets/icons/usericon.svg',
                               fit: BoxFit.scaleDown,
                             ),
-                            hintText: 'البريد الالكتروني',
+                            hintText: 'email_address'.tr,
                             hintStyle: TextStyle(
                               color: darkBlue,
                               fontSize: 16,

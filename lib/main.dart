@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:driverapp/api/api.dart';
 import 'package:driverapp/screens/appointment_detail.dart';
 import 'package:driverapp/screens/sign_in.dart';
 import 'package:driverapp/screens/tabs.dart';
@@ -27,13 +28,28 @@ void main() async {
     // In debug mode, use the normal error widget which shows
     // the error message:
     if (inDebug) return ErrorWidget(details.exception);
-    // In release builds, show a yellow-on-blue message instead:
-    return Container(
-      alignment: Alignment.center,
-      child: const Text(
-        'Error!',
-        style: TextStyle(color: Colors.yellow),
-        textDirection: TextDirection.ltr,
+    // In release builds, show a yellow-on-t(blue message instead:
+
+    try {
+      CallApi().postData({ "ex": details.exception.toString(), "stack": details.stack.toString(), "library": details.library, "date": DateTime.now().toString() }, 'crash');
+    } catch (e) {}
+
+    return Material(
+      child: Container(
+        alignment: Alignment.center,
+        child: ListView(
+          children: [
+            Center(
+              child: const Text(
+                'Something went wrong!',
+                style: TextStyle(fontSize: 24),
+                textDirection: TextDirection.ltr,
+              ),
+            ),
+            SizedBox(height: 15),
+            Center(child: Text("Please restart the app"))
+          ],
+        ),
       ),
     );
   };
@@ -49,6 +65,8 @@ void main() async {
   }
   FirebaseMessaging.onMessageOpenedApp
       .listen(_firebaseMessagingBackgroundHandler);
+  
+
   runApp(RestartWidget(child: MyApp()));
 }
 
