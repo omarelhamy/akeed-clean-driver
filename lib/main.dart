@@ -31,7 +31,7 @@ void main() async {
     // In release builds, show a yellow-on-t(blue message instead:
 
     try {
-      CallApi().postData({ "ex": details.exception.toString(), "stack": details.stack.toString(), "library": details.library, "date": DateTime.now().toString() }, 'crash');
+      CallApi().postData({ "app": "driver", "ex": details.exception.toString(), "stack": details.stack.toString(), "library": details.library, "date": DateTime.now().toString() }, 'crash');
     } catch (e) {}
 
     return Material(
