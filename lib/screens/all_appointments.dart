@@ -4,6 +4,7 @@ import 'package:driverapp/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -277,7 +278,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                       textDirection: material.TextDirection.ltr,
                     ),
                     Text(
-                      '${'service'.tr}: ${_selectedAppointment["service"]["service_name"]}',
+                      '${'service'.tr}: ${Get.locale.languageCode == 'ar' ? _selectedAppointment["service"]["service_name"] : _selectedAppointment["service"]["service_name_en"]}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -406,7 +407,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                   textDirection: material.TextDirection.ltr,
                 ),
                 Text(
-                  '${'service'.tr}: ${apt["service"]["service_name"]}',
+                  '${'service'.tr}: ${Get.locale.languageCode == 'ar' ? apt["service"]["service_name"] : apt["service"]["service_name_en"]}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
