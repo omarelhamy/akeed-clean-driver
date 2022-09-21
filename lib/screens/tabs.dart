@@ -11,7 +11,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:eventify/eventify.dart';
-import 'package:background_location/background_location.dart';
 
 import 'all_appointments.dart';
 
@@ -41,7 +40,6 @@ class _TabsScreenState extends State<TabsScreen>
 
   @override
   void dispose() {
-    BackgroundLocation.stopLocationService();
     super.dispose();
   }
 
