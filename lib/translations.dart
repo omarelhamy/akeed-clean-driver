@@ -73,7 +73,9 @@ class AppTranslations extends Translations {
           'reset_password': 'استرجاع كلمة المرور',
           'password_sent': '"تم إرسال كلمة المرور إلى بريدك الالكتروني',
           'do_try_again': 'حاول مرة اخرى',
-          'arabic': 'استخدام اللغة العربية؟'
+          'arabic': 'استخدام اللغة العربية؟',
+          'cant_phone': 'لا يمكن الاتصال بالهاتف',
+          'client_details': 'بيانات العميل',
         },
         'en_US': {
           'appointments': 'Appointments',
@@ -145,7 +147,9 @@ class AppTranslations extends Translations {
           'reset_password': 'Reset Password',
           'password_sent': 'Password sent to your email',
           'do_try_again': 'Try again',
-          'arabic': 'Use Arabic?'
+          'arabic': 'Use Arabic?',
+          'cant_phone': 'Can\'t call phone',
+          'client_details': 'Client Details',
         }
       };
 }

@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:driverapp/api/api.dart';
 import 'package:map_launcher/map_launcher.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 const darkBlue = Color(0xFF265E9E);
 const extraDarkBlue = Color(0xFF91B4D8);
@@ -46,6 +48,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   var clientNotes = '';
 
   List<Map<String, dynamic>> vas = [];
+  Map<String, dynamic> aptUser = {};
 
   @override
   void initState() {
@@ -75,6 +78,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     AppointmentDetailScreenStatus = theData['appointment_status'];
     AppointmentDetailScreenStatusKey = theData['appointment_status'];
 
+    aptUser = theData['user'];
     lng = theData['lang'];
     lat = theData['lat'];
 
@@ -165,8 +169,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               var body = json.decode(res.body);
               if (body['success'] == true) {
                 GetAppointmentDetailScreenData();
-              }
-              else {
+              } else {
                 Fluttertoast.showToast(msg: 'try_again'.tr);
               }
 
@@ -255,6 +258,47 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                           ],
                         ),
                         SizedBox(height: 20),
+                        Text(
+                          'client_details'.tr,
+                          style: TextStyle(
+                            color: darkBlue,
+                            fontSize: 18,
+                            fontFamily: 'Cairo',
+                          ),
+                        ),
+                        SizedBox(height: 10.0),
+                        if (aptUser["name"] != null)
+                          Card(
+                            child: ListTile(
+                              onTap: () async {
+                                if (!await launch(
+                                    'tel:${aptUser["phone_code"]}${aptUser["phone"]}')) {
+                                  Fluttertoast.showToast(msg: 'cant_phone'.tr);
+                                }
+                              },
+                              title: Text(
+                                aptUser["name"] ?? "",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Align(
+                                alignment: Get.locale.languageCode == 'ar'
+                                    ? Alignment.centerRight
+                                    : Alignment.centerLeft,
+                                child: Directionality(
+                                  textDirection: TextDirection.ltr,
+                                  child: Text(
+                                    '${aptUser["phone_code"]}${aptUser["phone"]}',
+                                    style: TextStyle(
+                                      color: Colors.blueAccent,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              trailing: Icon(Icons.call, color: Colors.green),
+                            ),
+                          ),
+                        SizedBox(height: 10),
                         if (clientNotes != null && clientNotes.isNotEmpty)
                           Container(
                             padding: EdgeInsets.all(10),
@@ -362,8 +406,11 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          viewAppointmentDetailScreenservice[
-                                              "service_name"],
+                                          Get.locale.languageCode == 'ar'
+                                              ? viewAppointmentDetailScreenservice[
+                                                  "service_name"]
+                                              : viewAppointmentDetailScreenservice[
+                                                  "service_name_en"],
                                           style: TextStyle(
                                             color: darkBlue,
                                             fontSize: 18,
@@ -402,16 +449,16 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                             ),
                                           ],
                                         ),
-                                        SizedBox(height: 5.0),
-                                        Text(
-                                          viewAppointmentDetailScreenservice[
-                                              "description"],
-                                          style: TextStyle(
-                                            color: extraDarkBlue,
-                                            fontSize: 14,
-                                            fontFamily: 'Cairo',
-                                          ),
-                                        ),
+                                        // SizedBox(height: 5.0),
+                                        // Text(
+                                        //   viewAppointmentDetailScreenservice[
+                                        //       "description"],
+                                        //   style: TextStyle(
+                                        //     color: extraDarkBlue,
+                                        //     fontSize: 14,
+                                        //     fontFamily: 'Cairo',
+                                        //   ),
+                                        // ),
                                       ],
                                     ),
                                   ),

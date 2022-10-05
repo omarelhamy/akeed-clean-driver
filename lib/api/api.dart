@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:background_location/background_location.dart';
 import 'package:eventify/eventify.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -75,7 +74,6 @@ class CallApi {
       "status": "0",
     }, 'set_coworker_status');
     await CallApi.updateLocation();
-    BackgroundLocation.stopLocationService();
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     localStorage.remove('user');
     localStorage.remove('token');
