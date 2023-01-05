@@ -50,6 +50,7 @@ dependencies:
   eventify: ^1.0.0
   get: ^4.6.1
   url_launcher: ^6.0.20
+  cloud_firestore: ^3.5.1
 
 dev_dependencies:
   flutter_test:

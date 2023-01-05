@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:driverapp/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
@@ -110,7 +112,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
               '${e['date']} ${e['start_time'].toString().toUpperCase()}');
           return e;
         }).toList();
-        
+
         _ongoing = _ongoing.map((e) {
           DateFormat inputFormat = DateFormat("yyyy-MM-dd hh:mm a");
           e['full_date'] = inputFormat.parse(
@@ -177,6 +179,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                 controller: _tabController,
                 tabs: [
                   Tab(
+                    text: 'live_requests'.tr,
+                  ),
+                  Tab(
                     text: 'current_appointments'.tr,
                   ),
                   Tab(
@@ -202,6 +207,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
             ? TabBarView(
                 controller: _tabController,
                 children: [
+                  buildListStream(),
                   buildList(current),
                   buildList(ongoing),
                   buildList(past),
@@ -344,7 +350,26 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
     });
   }
 
-  Widget buildList(List<Map<String, dynamic>> list, {bool isPast = false}) {
+  Widget buildListStream() {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('requests').snapshots(),
+      builder: (ctx, snapshot) {
+        if (snapshot.hasData) {
+          return buildList(snapshot.data, isRequest: true);
+        }
+
+        return Center(
+          child: Text(
+            'no_appointments'.tr,
+            style: TextStyle(color: Colors.grey),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildList(List<Map<String, dynamic>> list,
+      {bool isPast = false, isRequest = false}) {
     if (list.isEmpty) {
       return Center(
         child: Text(
@@ -361,6 +386,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
         return Card(
           child: ListTile(
             onTap: () async {
+              if (isRequest) return;
               if (!isPast)
                 await Navigator.push(
                   context,
@@ -425,7 +451,58 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                     fontSize: 14,
                     fontFamily: 'Cairo',
                   ),
-                )
+                ),
+                if (isRequest)
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: TextButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context).primaryColor),
+                      ),
+                      onPressed: () async {
+                        var id = apt['id'];
+                        FirebaseFirestore.instance
+                            .collection('requests')
+                            .doc(apt['id'])
+                            .delete();
+
+                        //request
+                        setState(() {
+                          showSpinner = true;
+                        });
+
+                        var res = await CallApi().postDataWithToken(
+                            {}, 'update_appointment_status/$id/ACCEPT');
+                        var body = json.decode(res.body);
+                        if (body['success'] == true) {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (ctx) => AppointmentDetailScreen(
+                                appoinmentId: id,
+                              ),
+                            ),
+                          );
+                          fetchData();
+                        } else {
+                          Fluttertoast.showToast(msg: 'try_again'.tr);
+                        }
+
+                        setState(() {
+                          showSpinner = false;
+                        });
+                      },
+                      child: Text(
+                        'accept_appointment'.tr,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0,
+                          fontFamily: 'Cairo',
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),

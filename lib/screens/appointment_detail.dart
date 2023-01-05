@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -298,6 +299,41 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                               trailing: Icon(Icons.call, color: Colors.green),
                             ),
                           ),
+                          SizedBox(height: 10.0),
+                        if (aptUser["name"] != null)
+                          Card(
+                            child: ListTile(
+                              onTap: () async {
+                                var whatsappUrl ="whatsapp://send?phone=${aptUser["phone_code"]}${aptUser["phone"]}";
+                                if (await canLaunch(whatsappUrl)) {
+                                  launch(whatsappUrl);
+                                }
+                                else {
+                                  Fluttertoast.showToast(msg: 'cant_whatsapp'.tr);
+                                }
+                              },
+                              title: Text(
+                                aptUser["name"] ?? "",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Align(
+                                alignment: Get.locale.languageCode == 'ar'
+                                    ? Alignment.centerRight
+                                    : Alignment.centerLeft,
+                                child: Directionality(
+                                  textDirection: TextDirection.ltr,
+                                  child: Text(
+                                    '${aptUser["phone_code"]}${aptUser["phone"]}',
+                                    style: TextStyle(
+                                      color: Colors.blueAccent,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              trailing: Icon(FontAwesomeIcons.whatsapp, color: Colors.green),
+                            ),
+                          ),
                         SizedBox(height: 10),
                         if (clientNotes != null && clientNotes.isNotEmpty)
                           Container(
@@ -416,14 +452,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                             fontSize: 18,
                                             fontFamily: 'Cairo',
                                           ),
-                                        ),
-                                      ),
-                                      Text(
-                                        '${totalCharge} ${'riyal'.tr}',
-                                        style: TextStyle(
-                                          color: darkBlue,
-                                          fontFamily: 'Cairo',
-                                          fontSize: 16,
                                         ),
                                       ),
                                     ],
