@@ -57,7 +57,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     _tabController.addListener(_handleTabSelection);
     fetchData();
 
@@ -355,7 +355,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
       stream: FirebaseFirestore.instance.collection('requests').snapshots(),
       builder: (ctx, snapshot) {
         if (snapshot.hasData) {
-          return buildList(snapshot.data, isRequest: true);
+          List<Map<String, dynamic>> list = [];
+          snapshot.data.docs.forEach((doc) {
+              var data = doc.data();
+              data['service'] = data['service'][0];
+              list.add(data);
+          });
+          return buildList(list, isRequest: true);
         }
 
         return Center(
@@ -453,52 +459,55 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                   ),
                 ),
                 if (isRequest)
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: TextButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            Theme.of(context).primaryColor),
-                      ),
-                      onPressed: () async {
-                        var id = apt['id'];
-                        FirebaseFirestore.instance
-                            .collection('requests')
-                            .doc(apt['id'])
-                            .delete();
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).primaryColor),
+                        ),
+                        onPressed: () async {
+                          setState(() {
+                            showSpinner = true;
+                          });
 
-                        //request
-                        setState(() {
-                          showSpinner = true;
-                        });
+                          var id = apt['id'];
+                          var res = await CallApi().postDataWithToken(
+                              {}, 'update_appointment_status/$id/ACCEPT');
+                          var body = json.decode(res.body);
+                          if (body['success'] == true) {
+                            await FirebaseFirestore.instance
+                              .collection('requests')
+                              .doc(apt['id'].toString())
+                              .delete();
 
-                        var res = await CallApi().postDataWithToken(
-                            {}, 'update_appointment_status/$id/ACCEPT');
-                        var body = json.decode(res.body);
-                        if (body['success'] == true) {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (ctx) => AppointmentDetailScreen(
-                                appoinmentId: id,
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (ctx) => AppointmentDetailScreen(
+                                  appoinmentId: id,
+                                ),
                               ),
-                            ),
-                          );
-                          fetchData();
-                        } else {
-                          Fluttertoast.showToast(msg: 'try_again'.tr);
-                        }
+                            );
+                            fetchData();
+                          } else {
+                            Fluttertoast.showToast(msg: 'try_again'.tr);
+                          }
+                          
+                          //request
 
-                        setState(() {
-                          showSpinner = false;
-                        });
-                      },
-                      child: Text(
-                        'accept_appointment'.tr,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18.0,
-                          fontFamily: 'Cairo',
+                          setState(() {
+                            showSpinner = false;
+                          });
+                        },
+                        child: Text(
+                          'accept_appointment'.tr,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.0,
+                            fontFamily: 'Cairo',
+                          ),
                         ),
                       ),
                     ),

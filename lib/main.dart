@@ -106,13 +106,15 @@ void onSelectNotification(String body) {
   final Map<String, dynamic> data = jsonDecode(body ?? '{}');
   print('NOTIFICATION: $data');
 
-  navKey.currentState.push(
-    MaterialPageRoute(
-      builder: (context) => AppointmentDetailScreen(
-        appoinmentId: data['appointment_id'],
+  if (data['open'] != false) {
+    navKey.currentState.push(
+      MaterialPageRoute(
+        builder: (context) => AppointmentDetailScreen(
+          appoinmentId: data['appointment_id'],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 class RestartWidget extends StatefulWidget {
