@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -50,6 +51,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   List<Map<String, dynamic>> vas = [];
   Map<String, dynamic> aptUser = {};
+  Map<String, dynamic> carDetail;
 
   @override
   void initState() {
@@ -80,6 +82,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     AppointmentDetailScreenStatusKey = theData['appointment_status'];
 
     aptUser = theData['user'];
+    carDetail = theData['user_car'] ?? null;
     lng = theData['lang'];
     lat = theData['lat'];
 
@@ -258,6 +261,49 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                             )
                           ],
                         ),
+                        if (carDetail != null) SizedBox(height: 20),
+                        if (carDetail != null)
+                          Text(
+                            'car_details'.tr,
+                            style: TextStyle(
+                              color: darkBlue,
+                              fontSize: 18,
+                              fontFamily: 'Cairo',
+                            ),
+                          ),
+                        if (carDetail != null) SizedBox(height: 10),
+                        if (carDetail != null)
+                          Card(
+                            child: ListTile(
+                              title: Text(
+                                '${carDetail['make']} - ${carDetail['model']}',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Text(carDetail['plate_number']),
+                              trailing: SizedBox(
+                                width: 85,
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 50,
+                                      child: Image.network(
+                                        carDetail['car_type']['image'],
+                                      ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Container(
+                                      width: 20,
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: Color(int.parse(carDetail['color'])),
+                                        borderRadius: BorderRadius.circular(100)
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                         SizedBox(height: 20),
                         Text(
                           'client_details'.tr,
@@ -299,17 +345,20 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                               trailing: Icon(Icons.call, color: Colors.green),
                             ),
                           ),
-                          SizedBox(height: 10.0),
+                        SizedBox(height: 10.0),
                         if (aptUser["name"] != null)
                           Card(
                             child: ListTile(
                               onTap: () async {
-                                var whatsappUrl ="whatsapp://send?phone=${aptUser["phone_code"]}${aptUser["phone"]}";
-                                if (await canLaunch(whatsappUrl)) {
-                                  launch(whatsappUrl);
-                                }
-                                else {
-                                  Fluttertoast.showToast(msg: 'cant_whatsapp'.tr);
+                                var whatsappUrl =
+                                    "whatsapp://send?phone=${aptUser["phone_code"]}${aptUser["phone"]}";
+                                var whatappURL_ios = "https://wa.me/${aptUser["phone_code"]}${aptUser["phone"]}";
+                                
+                                var url = Platform.isIOS ? whatappURL_ios : whatsappUrl;
+                                if (await canLaunch(url)) {
+                                  launch(url, forceSafariVC: false);
+                                } else {
+                                  launch(whatappURL_ios, forceSafariVC: false);
                                 }
                               },
                               title: Text(
@@ -331,7 +380,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                   ),
                                 ),
                               ),
-                              trailing: Icon(FontAwesomeIcons.whatsapp, color: Colors.green),
+                              trailing: Icon(FontAwesomeIcons.whatsapp,
+                                  color: Colors.green),
                             ),
                           ),
                         SizedBox(height: 10),

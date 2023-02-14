@@ -76,6 +76,7 @@ class AppTranslations extends Translations {
           'arabic': 'استخدام اللغة العربية؟',
           'cant_phone': 'لا يمكن الاتصال بالهاتف',
           'client_details': 'بيانات العميل',
+          'car_details': 'بيانات السيارة',
           'cant_whatsapp': 'لا يمكن الاتصال باستخدام واتساب ، تأكد من تثبيته.',
           'live_requests': 'الطلبات'
         },
@@ -152,6 +153,7 @@ class AppTranslations extends Translations {
           'arabic': 'Use Arabic?',
           'cant_phone': 'Can\'t call phone',
           'client_details': 'Client Details',
+          'car_details': 'Car Details',
           'cant_whatsapp': 'Can\'t call using Whatsapp, make sure its installed.',
           'live_requests': 'Requests'
         }
